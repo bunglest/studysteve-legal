@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StudySteve Premium — Unlock AI Study Tools for $5/month</title>
-  <meta name="description" content="Upgrade to StudySteve Premium and unlock AI explanations, quizzes, flashcards, study plans and more. $5/month, cancel anytime." />
+  <title>StudySteve Premium — Personal $5/mo · Server $15/mo</title>
+  <meta name="description" content="Upgrade to StudySteve Premium. Personal plan for $5/month, or unlock your whole server for $15/month. AI explanations, quizzes, flashcards and more." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>" />
   <script async src="https://js.stripe.com/v3/buy-button.js"></script>
   <style>
@@ -167,43 +167,71 @@
 
     /* ── CHECKOUT ────────────────────────────────────────────────── */
     .checkout-section { background: var(--bg-alt); padding: 4rem 2rem; text-align: center; transition: var(--transition); }
+    .plans-grid {
+      max-width: 860px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    }
     .checkout-card {
-      max-width: 520px; margin: 0 auto;
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 24px; padding: 3rem 2.5rem;
+      border-radius: 24px; padding: 2.5rem 2rem;
       box-shadow: var(--shadow-lg);
       position: relative; overflow: hidden;
       transition: var(--transition);
+      text-align: left;
     }
+    .checkout-card.featured { border-color: var(--primary); }
     .checkout-card::before {
       content: ''; position: absolute; top: 0; left: 0; right: 0;
       height: 4px; background: var(--grad);
     }
-    .checkout-title { font-size: 1.5rem; font-weight: 800; margin-bottom: .5rem; color: var(--text); }
-    .checkout-sub { color: var(--muted); font-size: .95rem; margin-bottom: 2rem; }
+    .plan-badge {
+      display: inline-block; background: var(--label-bg); color: var(--label-col);
+      font-size: .75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; padding: .25rem .75rem; border-radius: 50px;
+      margin-bottom: .75rem;
+    }
+    .plan-badge.server-badge { background: rgba(118,75,162,.15); color: #b38aff; }
+    .checkout-title { font-size: 1.4rem; font-weight: 800; margin-bottom: .25rem; color: var(--text); }
+    .plan-price {
+      display: flex; align-items: baseline; gap: .25rem; margin-bottom: .75rem;
+    }
+    .plan-price .big { font-size: 2.4rem; font-weight: 800; color: var(--primary); line-height: 1; }
+    .plan-price .per { color: var(--muted); font-size: .9rem; }
+    .checkout-sub { color: var(--muted); font-size: .88rem; margin-bottom: 1.5rem; line-height: 1.5; }
     .checkout-steps {
-      list-style: none; text-align: left; margin-bottom: 2rem;
-      background: var(--bg-alt); border-radius: 12px; padding: 1.25rem 1.5rem;
+      list-style: none; text-align: left; margin-bottom: 1.5rem;
+      background: var(--bg-alt); border-radius: 12px; padding: 1rem 1.25rem;
       transition: var(--transition);
     }
     .checkout-steps li {
       display: flex; align-items: flex-start; gap: .75rem;
-      padding: .5rem 0; font-size: .9rem;
+      padding: .45rem 0; font-size: .87rem;
       color: var(--step-text);
       border-bottom: 1px solid var(--border);
     }
     .checkout-steps li:last-child { border-bottom: none; }
     .step-badge {
       background: var(--grad); color: white;
-      width: 22px; height: 22px; border-radius: 50%;
-      font-size: .72rem; font-weight: 700;
+      width: 20px; height: 20px; border-radius: 50%;
+      font-size: .68rem; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; margin-top: .1rem;
+      flex-shrink: 0; margin-top: .15rem;
     }
-    stripe-buy-button { display: block; }
-    .stripe-wrap { display: flex; justify-content: center; margin-bottom: 1.25rem; }
-    .checkout-secure { font-size: .8rem; color: var(--muted); display: flex; align-items: center; justify-content: center; gap: .4rem; }
+    stripe-buy-button { display: block; width: 100%; }
+    .stripe-wrap { display: flex; justify-content: center; margin-bottom: 1rem; }
+    .discord-cta-btn {
+      display: block; width: 100%; padding: .85rem 1.5rem;
+      background: var(--grad); color: white;
+      border: none; border-radius: 50px; cursor: pointer;
+      font-size: .95rem; font-weight: 700; font-family: inherit;
+      text-align: center; text-decoration: none;
+      transition: opacity .2s, transform .2s;
+      margin-bottom: 1rem;
+    }
+    .discord-cta-btn:hover { opacity: .9; transform: translateY(-1px); }
+    .checkout-secure { font-size: .78rem; color: var(--muted); display: flex; align-items: center; justify-content: center; gap: .35rem; }
+    @media (max-width: 640px) { .plans-grid { grid-template-columns: 1fr; } }
 
     /* ── COMPARE TABLE ───────────────────────────────────────────── */
     .compare { padding: 5rem 2rem; background: var(--bg); transition: var(--transition); }
@@ -230,6 +258,7 @@
     .yes { color: var(--green); font-size: 1.1rem; }
     .no  { color: var(--no-col); font-size: 1.1rem; }
     .col-premium { background: var(--col-prem); }
+    .col-server  { background: rgba(118,75,162,.06); }
 
     /* ── FEATURES GRID ───────────────────────────────────────────── */
     .prem-features { background: var(--bg-alt); padding: 5rem 2rem; transition: var(--transition); }
@@ -296,7 +325,7 @@
           <span class="theme-toggle-icon icon-moon">🌙</span>
         </button>
       </li>
-      <li><a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot&permissions=8" class="nav-cta">Add to Discord</a></li>
+      <li><a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot+applications.commands&permissions=274878000192" class="nav-cta">Add to Discord</a></li>
     </ul>
   </div>
 </nav>
@@ -304,46 +333,102 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-eyebrow">✨ StudySteve Premium</div>
-  <h1>Your AI study partner.<br><span>For $5 a month.</span></h1>
+  <h1>Your AI study partner.<br><span>Two plans. One bot.</span></h1>
   <p class="hero-sub">Unlock AI-powered explanations, quizzes, flashcards, and study plans — all directly inside Discord.</p>
-  <div class="hero-price">
-    <span class="price-big">$5</span>
-    <span class="price-detail">/ month &nbsp;·&nbsp; cancel anytime</span>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;">
+    <div class="hero-price" style="flex-direction:column;gap:.1rem;text-align:center;">
+      <div style="font-size:.8rem;font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.25rem;">👤 Personal</div>
+      <div style="display:flex;align-items:baseline;gap:.3rem;">
+        <span class="price-big">$5</span>
+        <span class="price-detail">/ mo</span>
+      </div>
+      <div style="font-size:.82rem;opacity:.7;">Just for you</div>
+    </div>
+    <div class="hero-price" style="flex-direction:column;gap:.1rem;text-align:center;">
+      <div style="font-size:.8rem;font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.25rem;">🏫 Server</div>
+      <div style="display:flex;align-items:baseline;gap:.3rem;">
+        <span class="price-big">$15</span>
+        <span class="price-detail">/ mo</span>
+      </div>
+      <div style="font-size:.82rem;opacity:.7;">Whole server unlocked</div>
+    </div>
   </div>
   <div class="hero-trust">
     <span>✓ Activated instantly</span>
     <span>✓ No contracts</span>
     <span>✓ Secure via Stripe</span>
-    <span>✓ Works in every server</span>
+    <span>✓ Cancel anytime</span>
   </div>
 </section>
 
 <!-- CHECKOUT -->
 <section class="checkout-section">
-  <div class="checkout-card">
-    <div class="checkout-title">Subscribe to Premium</div>
-    <div class="checkout-sub">Coming from Discord? Run <code>/premium</code> in any server — your ID is grabbed automatically and you just pay. Visiting directly? Follow the steps below.</div>
-    <ol class="checkout-steps">
-      <li>
-        <div class="step-badge">1</div>
-        <div><strong>Find your Discord User ID</strong> — enable Developer Mode in Discord (Settings → Advanced → Developer Mode), then right-click your name and select <em>Copy User ID</em>. It's an 18-digit number.</div>
-      </li>
-      <li>
-        <div class="step-badge">2</div>
-        <div><strong>Click Subscribe below</strong> — enter that ID in the custom field when prompted, then complete payment.</div>
-      </li>
-      <li>
-        <div class="step-badge">3</div>
-        <div><strong>Premium activates instantly</strong> — run <code>/premium</code> in Discord to confirm. All AI features are unlocked immediately.</div>
-      </li>
-    </ol>
-    <div class="stripe-wrap">
-      <stripe-buy-button
-        buy-button-id="buy_btn_1TAlDpFNP0J6VdMWcndYmQr7"
-        publishable-key="pk_live_51TAOtTFNP0J6VdMW47OTqGHfMptQOOBBQ6DOa7FGLOEae52OR7HBSrB4BhAyNoEgF8tORekfIQVU69LUgXeP8Rbp00paL5jPNe"
-      ></stripe-buy-button>
+  <div class="section-header" style="margin-bottom:2.5rem;">
+    <span class="section-label">Choose Your Plan</span>
+    <h2>Subscribe to Premium</h2>
+    <p>The easiest way is to run <code>/premium</code> in Discord — it handles everything automatically.</p>
+  </div>
+  <div class="plans-grid">
+
+    <!-- Personal Plan -->
+    <div class="checkout-card">
+      <div class="plan-badge">👤 Personal</div>
+      <div class="checkout-title">Personal Plan</div>
+      <div class="plan-price">
+        <span class="big">$5</span>
+        <span class="per">/ month</span>
+      </div>
+      <div class="checkout-sub">Just for you — works in DMs and every server you're in. Perfect if you want AI tools for yourself.</div>
+      <ol class="checkout-steps">
+        <li>
+          <div class="step-badge">1</div>
+          <div><strong>Easiest:</strong> Run <code>/premium</code> in Discord and click <em>Personal — $5/mo</em>. Your ID is auto-filled.</div>
+        </li>
+        <li>
+          <div class="step-badge">2</div>
+          <div><strong>From this page:</strong> Enable Developer Mode in Discord (Settings → Advanced), right-click your name and copy your User ID, then click Subscribe below.</div>
+        </li>
+        <li>
+          <div class="step-badge">3</div>
+          <div><strong>Premium activates instantly</strong> — run <code>/premium</code> to confirm.</div>
+        </li>
+      </ol>
+      <div class="stripe-wrap">
+        <stripe-buy-button
+          buy-button-id="buy_btn_1TAlDpFNP0J6VdMWcndYmQr7"
+          publishable-key="pk_live_51TAOtTFNP0J6VdMW47OTqGHfMptQOOBBQ6DOa7FGLOEae52OR7HBSrB4BhAyNoEgF8tORekfIQVU69LUgXeP8Rbp00paL5jPNe"
+        ></stripe-buy-button>
+      </div>
+      <div class="checkout-secure">🔒 Secure payment via Stripe</div>
     </div>
-    <div class="checkout-secure">🔒 Payments processed securely by Stripe. We never see your card details.</div>
+
+    <!-- Server Plan -->
+    <div class="checkout-card featured">
+      <div class="plan-badge server-badge">🏫 Server</div>
+      <div class="checkout-title">Server Plan</div>
+      <div class="plan-price">
+        <span class="big">$15</span>
+        <span class="per">/ month</span>
+      </div>
+      <div class="checkout-sub">Unlocks AI features for <strong>every member</strong> of your server. One payment covers your whole community — ideal for study groups and class servers.</div>
+      <ol class="checkout-steps">
+        <li>
+          <div class="step-badge">1</div>
+          <div><strong>Add StudySteve</strong> to your server if you haven't already.</div>
+        </li>
+        <li>
+          <div class="step-badge">2</div>
+          <div><strong>Run <code>/premium</code></strong> in your server and click <em>This Server — $15/mo</em>. Your server ID is auto-filled.</div>
+        </li>
+        <li>
+          <div class="step-badge">3</div>
+          <div><strong>All members instantly unlock</strong> every AI feature — no action needed from your members.</div>
+        </li>
+      </ol>
+      <a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot+applications.commands&permissions=274878000192" class="discord-cta-btn">Add StudySteve to Your Server →</a>
+      <div class="checkout-secure">🔒 Then run /premium in Discord to subscribe</div>
+    </div>
+
   </div>
 </section>
 
@@ -352,7 +437,7 @@
   <div class="container">
     <div class="section-header">
       <span class="section-label">Compare Plans</span>
-      <h2>Free vs Premium</h2>
+      <h2>Free vs Personal vs Server</h2>
       <p>Start free, upgrade when you're ready.</p>
     </div>
     <table class="compare-table">
@@ -360,27 +445,30 @@
         <tr>
           <th>Feature</th>
           <th>Free</th>
-          <th class="col-premium">✨ Premium</th>
+          <th class="col-premium">👤 Personal</th>
+          <th class="col-server">🏫 Server</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="category-row"><td colspan="3">Core Tools</td></tr>
-        <tr><td>Assignment Tracker</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
-        <tr><td>Study Timer & Stats</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
-        <tr><td>Grade Tracker</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
-        <tr><td>Morning DMs & Weekly Reports</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
-        <tr class="category-row"><td colspan="3">AI Features</td></tr>
-        <tr><td>AI Topic Explanations</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
-        <tr><td>Custom Quiz Generator</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
-        <tr><td>Flashcard Maker from Notes</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
-        <tr><td>Personalised Study Planner</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
-        <tr><td>Math Equation Renderer</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
-        <tr><td>Chemical Structure Viewer</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
-        <tr><td>AI Grade Analysis</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
-        <tr><td>Syllabus Screenshot Import</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
-        <tr class="category-row"><td colspan="3">Pricing</td></tr>
-        <tr><td>Cost</td><td>Free forever</td><td class="col-premium"><strong>$5 / month</strong></td></tr>
-        <tr><td>Cancel anytime</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+        <tr class="category-row"><td colspan="4">Core Tools</td></tr>
+        <tr><td>Assignment Tracker</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="yes">✓</span></td></tr>
+        <tr><td>Study Timer & Stats</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="yes">✓</span></td></tr>
+        <tr><td>Grade Tracker</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="yes">✓</span></td></tr>
+        <tr><td>Morning DMs & Weekly Reports</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="yes">✓</span></td></tr>
+        <tr class="category-row"><td colspan="4">AI Features</td></tr>
+        <tr><td>AI Topic Explanations</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="yes">✓</span></td></tr>
+        <tr><td>Custom Quiz Generator</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="yes">✓</span></td></tr>
+        <tr><td>Flashcard Maker from Notes</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="yes">✓</span></td></tr>
+        <tr><td>Personalised Study Planner</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="yes">✓</span></td></tr>
+        <tr><td>Math Equation Renderer</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="yes">✓</span></td></tr>
+        <tr><td>Chemical Structure Viewer</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="yes">✓</span></td></tr>
+        <tr><td>AI Grade Analysis</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="yes">✓</span></td></tr>
+        <tr><td>Syllabus Screenshot Import</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="yes">✓</span></td></tr>
+        <tr class="category-row"><td colspan="4">Scope & Pricing</td></tr>
+        <tr><td>Who gets AI features</td><td>Nobody</td><td class="col-premium">Just you</td><td class="col-server">Every server member</td></tr>
+        <tr><td>Works in DMs</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="no">—</span></td></tr>
+        <tr><td>Cost</td><td>Free forever</td><td class="col-premium"><strong>$5 / month</strong></td><td class="col-server"><strong>$15 / month</strong></td></tr>
+        <tr><td>Cancel anytime</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td><td class="col-server"><span class="yes">✓</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -457,8 +545,12 @@
       <div class="faq-a">Yes. Cancel through Stripe at any time. You keep premium access until the end of your current billing period, then it's automatically revoked. No awkward cancellation flows or hidden fees.</div>
     </div>
     <div class="faq-item">
-      <button class="faq-q">Does premium work in multiple Discord servers? <span class="faq-arrow">▾</span></button>
-      <div class="faq-a">Yes — premium is tied to your Discord User ID, so it works in every server where StudySteve is installed. One subscription covers all your servers.</div>
+      <button class="faq-q">What's the difference between Personal and Server plans? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a"><strong>Personal ($5/mo)</strong> unlocks AI features just for you — in DMs and in any server you're in. <strong>Server ($15/mo)</strong> is paid once by a server owner or admin and unlocks AI features for <em>every member</em> of that server, including free users. If you manage a study group or class server, the Server plan is much better value once you have a few active members.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Does personal premium work in multiple Discord servers? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a">Yes — Personal premium is tied to your Discord User ID, so it follows you into every server where StudySteve is installed. One subscription covers all your servers.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q">Is my payment information secure? <span class="faq-arrow">▾</span></button>
@@ -474,10 +566,10 @@
 <!-- CTA BOTTOM -->
 <section class="cta-bottom">
   <h2>Ready to study smarter?</h2>
-  <p>Join StudySteve Premium for $5/month and unlock every AI tool — cancel anytime.</p>
+  <p>Personal from $5/month, or unlock your whole server for $15/month. Cancel anytime.</p>
   <div class="cta-btns">
-    <a href="#" class="btn btn-white" onclick="window.scrollTo({top:document.querySelector('.checkout-section').offsetTop,behavior:'smooth'});return false;">Subscribe Now — $5/month</a>
-    <a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot&permissions=8" class="btn btn-outline-white">Try free first</a>
+    <a href="#" class="btn btn-white" onclick="window.scrollTo({top:document.querySelector('.checkout-section').offsetTop,behavior:'smooth'});return false;">See Plans →</a>
+    <a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot+applications.commands&permissions=274878000192" class="btn btn-outline-white">Try free first</a>
   </div>
 </section>
 
