@@ -1,318 +1,357 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudySteve - AI-Powered Discord Study Bot</title>
-    <meta name="description" content="Boost your productivity with StudySteve - the ultimate Discord study companion featuring AI explanations, quizzes, flashcards, grade tracking, and more!">
-    
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
-    
-    <!-- CSS Styles -->
-    <style>
-        :root {
-            --primary: #667eea;
-            --secondary: #818cf8;
-            --accent: #48bb78;
-            --text: #e2e8f0;
-            --text-light: #94a3b8;
-            --bg: #0f0f14;
-            --card-bg: #111124;
-            --border: #2d2d3d;
-            --shadow: rgba(0, 0, 0, 0.5);
-            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudySteve — AI-Powered Discord Study Bot</title>
+  <meta name="description" content="StudySteve is a Discord bot that helps students track assignments, study smarter with AI, and never miss a deadline." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>" />
+  <style>
+    :root {
+      --primary:   #667eea;
+      --purple:    #764ba2;
+      --green:     #48bb78;
+      --text:      #1a202c;
+      --muted:     #718096;
+      --border:    #e2e8f0;
+      --bg-alt:    #f7f9fc;
+      --white:     #ffffff;
+      --shadow-md: 0 8px 30px rgba(0,0,0,.10);
+      --shadow-lg: 0 20px 60px rgba(0,0,0,.14);
+      --grad:      linear-gradient(135deg, var(--primary), var(--purple));
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text); background: var(--white); line-height: 1.6; }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1140px; margin: 0 auto; padding: .9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .nav-brand { font-size: 1.2rem; font-weight: 800; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: .5rem; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-weight: 600; font-size: .95rem; transition: color .2s; }
+    .nav-links a:hover { color: var(--primary); }
+    .nav-cta { background: var(--grad); color: white !important; padding: .5rem 1.2rem; border-radius: 50px; transition: opacity .2s, transform .2s; }
+    .nav-cta:hover { opacity: .9; transform: translateY(-1px); }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.7;
-            color: var(--text);
-            background: var(--bg);
-        }
+    /* HERO */
+    .hero { background: var(--grad); color: white; padding: 6rem 2rem 4rem; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 50%, rgba(255,255,255,.06), transparent 60%), radial-gradient(circle at 80% 20%, rgba(255,255,255,.04), transparent 50%); pointer-events: none; }
+    .hero-badge { display: inline-block; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3); border-radius: 50px; padding: .35rem 1rem; font-size: .85rem; font-weight: 600; margin-bottom: 1.5rem; }
+    .hero h1 { font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 800; line-height: 1.15; margin-bottom: 1.25rem; letter-spacing: -.02em; }
+    .hero p { font-size: 1.2rem; opacity: .88; max-width: 580px; margin: 0 auto 2.5rem; }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
-        /* Navigation */
-        nav {
-            background: var(--bg);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+    /* DISCORD MOCKUP */
+    .mockup-wrap { max-width: 680px; margin: 4rem auto 0; }
+    .discord-window { background: #36393f; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-lg); text-align: left; font-size: .85rem; }
+    .discord-titlebar { background: #2f3136; padding: .6rem 1rem; display: flex; align-items: center; gap: .5rem; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
+    .discord-body { display: flex; }
+    .discord-sidebar { background: #2f3136; width: 170px; padding: 1rem .75rem; flex-shrink: 0; }
+    .sidebar-label { color: #8e9297; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .6rem; padding: 0 .5rem; }
+    .sidebar-ch { color: #8e9297; padding: .3rem .5rem; border-radius: 4px; display: flex; align-items: center; gap: .4rem; font-size: .82rem; }
+    .sidebar-ch.active { background: rgba(255,255,255,.06); color: #dcddde; }
+    .discord-chat { flex: 1; padding: 1rem; }
+    .chat-msg { display: flex; gap: .75rem; margin-bottom: 1rem; align-items: flex-start; }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .av-user { background: #5865f2; } .av-bot { background: var(--grad); }
+    .msg-header { display: flex; align-items: baseline; gap: .5rem; margin-bottom: .2rem; }
+    .msg-name { font-weight: 700; font-size: .88rem; }
+    .name-bot { color: #667eea; } .name-user { color: #dcddde; }
+    .msg-time { color: #72767d; font-size: .72rem; }
+    .msg-text { color: #dcddde; line-height: 1.5; }
+    .embed { background: #2f3136; border-left: 4px solid #667eea; border-radius: 0 6px 6px 0; padding: .75rem 1rem; margin-top: .5rem; }
+    .embed-title { color: #667eea; font-weight: 700; font-size: .9rem; margin-bottom: .4rem; }
+    .embed-text { color: #b9bbbe; font-size: .83rem; line-height: 1.6; }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    /* BUTTONS */
+    .btn { display: inline-block; padding: .85rem 2rem; border-radius: 50px; font-weight: 700; font-size: .95rem; text-decoration: none; transition: all .25s ease; }
+    .btn-white { background: white; color: var(--primary); }
+    .btn-white:hover { background: #f0f0ff; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.15); }
+    .btn-outline-white { background: transparent; color: white; border: 2px solid rgba(255,255,255,.6); }
+    .btn-outline-white:hover { background: rgba(255,255,255,.1); border-color: white; transform: translateY(-2px); }
+    .btn-primary { background: var(--grad); color: white; box-shadow: 0 4px 15px rgba(102,126,234,.35); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(102,126,234,.5); }
+    .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+    .btn-outline:hover { background: var(--primary); color: white; transform: translateY(-2px); }
 
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            list-style: none;
-        }
+    /* SECTIONS */
+    section { padding: 5rem 2rem; }
+    .container { max-width: 1140px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 3.5rem; }
+    .section-label { display: inline-block; background: #eef2ff; color: var(--primary); font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: .3rem .9rem; border-radius: 50px; margin-bottom: 1rem; }
+    .section-header h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: .75rem; }
+    .section-header p { color: var(--muted); font-size: 1.05rem; max-width: 540px; margin: 0 auto; }
 
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-light);
-            font-weight: 600;
-            transition: color 0.2s ease;
-        }
+    /* FEATURES */
+    .features { background: var(--bg-alt); }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .feat-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; transition: transform .25s, box-shadow .25s; }
+    .feat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .feat-icon { font-size: 2.2rem; margin-bottom: 1rem; display: block; }
+    .feat-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .6rem; }
+    .feat-card p { color: var(--muted); font-size: .93rem; line-height: 1.7; }
+    .feat-tag { display: inline-block; font-size: .72rem; font-weight: 700; padding: .2rem .6rem; border-radius: 50px; margin-bottom: .75rem; }
+    .tag-free { background: #f0fff4; color: var(--green); }
+    .tag-premium { background: #eef2ff; color: var(--primary); }
 
-        .nav-links a:hover {
-            color: var(--primary);
-        }
+    /* PREMIUM */
+    .premium { background: var(--grad); color: white; }
+    .premium-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .premium h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: 1rem; }
+    .prem-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: 2rem; }
+    .prem-list li { display: flex; align-items: center; gap: .6rem; font-size: .95rem; }
+    .prem-list li::before { content: '✓'; background: rgba(255,255,255,.2); color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .7rem; font-weight: 700; flex-shrink: 0; }
+    .price-card { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: 20px; padding: 2.5rem; backdrop-filter: blur(10px); text-align: center; }
+    .price-amount { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+    .price-period { opacity: .7; font-size: 1rem; margin-bottom: 1.5rem; display: block; }
+    .price-divider { border: none; border-top: 1px solid rgba(255,255,255,.2); margin: 1.5rem 0; }
+    .price-features { list-style: none; text-align: left; margin-bottom: 2rem; }
+    .price-features li { padding: .4rem 0; font-size: .92rem; opacity: .9; }
+    .secure-note { font-size: .82rem; opacity: .65; margin-top: 1rem; }
 
-        .logo {
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: 0.03em;
-        }
+    /* HOW IT WORKS */
+    .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 2rem; }
+    .step-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; text-align: center; transition: transform .25s, box-shadow .25s; }
+    .step-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .step-num { width: 48px; height: 48px; border-radius: 50%; background: var(--grad); color: white; font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
+    .step-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .6rem; }
+    .step-card p { color: var(--muted); font-size: .93rem; }
 
-        /* Hero Section */
-        header {
-            padding: 3.5rem 1.5rem 4rem;
-            text-align: center;
-        }
+    /* FOOTER */
+    footer { background: #1a202c; color: white; padding: 4rem 2rem 2rem; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; max-width: 1140px; margin: 0 auto 3rem; }
+    .footer-brand { font-size: 1.3rem; font-weight: 800; margin-bottom: 1rem; }
+    .footer-desc { color: #a0aec0; font-size: .93rem; line-height: 1.7; margin-bottom: 1.5rem; }
+    .footer-col h4 { font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #a0aec0; margin-bottom: 1rem; }
+    .footer-col ul { list-style: none; }
+    .footer-col a { color: #a0aec0; text-decoration: none; font-size: .93rem; display: block; margin-bottom: .5rem; transition: color .2s; }
+    .footer-col a:hover { color: white; }
+    .footer-bottom { border-top: 1px solid #2d3748; padding-top: 2rem; text-align: center; color: #4a5568; font-size: .85rem; max-width: 1140px; margin: 0 auto; }
 
-        header h1 {
-            font-size: 2.75rem;
-            font-weight: 800;
-            color: var(--text);
-            margin-bottom: 0.75rem;
-        }
-
-        .tagline {
-            max-width: 720px;
-            margin: 0 auto;
-            color: var(--text-light);
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 2.5rem;
-        }
-
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 0.95rem 1.8rem;
-            border-radius: 999px;
-            text-decoration: none;
-            font-weight: 700;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border: 2px solid transparent;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            background: var(--gradient);
-            color: white;
-            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.35);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 18px 40px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(103, 110, 250, 0.12);
-            color: var(--primary);
-        }
-
-        .hero {
-            padding: 4rem 2rem;
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3.5rem;
-            align-items: center;
-        }
-
-        .hero-content h2 {
-            font-size: 2.2rem;
-            margin-bottom: 1.25rem;
-            color: var(--text);
-        }
-
-        .hero-content p {
-            font-size: 1.05rem;
-            color: var(--text-light);
-            margin-bottom: 2rem;
-            max-width: 520px;
-        }
-
-        .hero-image {
-            text-align: center;
-        }
-
-        .hero-image img {
-            max-width: 100%;
-            border-radius: 18px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Features Section */
-        .features {
-            padding: 4rem 2rem;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 2.25rem;
-            color: var(--text);
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(103, 110, 250, 0.4);
-        }
-
-        .feature-card h3 {
-            margin-bottom: 0.75rem;
-            font-size: 1.2rem;
-            color: var(--text);
-        }
-
-        .feature-card p {
-            color: var(--text-light);
-            line-height: 1.6;
-        }
-
-        /* Footer */
-        footer {
-            padding: 3rem 2rem;
-            text-align: center;
-            color: var(--text-light);
-        }
-
-        footer p {
-            margin-bottom: 0.5rem;
-        }
-
-        footer a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 900px) {
-            .hero {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .premium-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .prem-list { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      section { padding: 3.5rem 1.25rem; }
+    }
+  </style>
 </head>
 <body>
-    <nav>
-        <div class="nav-container">
-            <div class="logo">StudySteve</div>
-            <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="privacy.html">Privacy</a></li>
-                <li><a href="terms.html">Terms</a></li>
-            </ul>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">📚 StudySteve</a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#premium">Premium</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot&permissions=8" class="nav-cta">Add to Discord</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">✨ Free to start &nbsp;·&nbsp; Premium from $5/mo</div>
+  <h1>Study smarter.<br>Stress less.</h1>
+  <p>StudySteve is your AI-powered Discord study companion — track assignments, run timers, and unlock powerful AI tools, all without leaving Discord.</p>
+  <div class="hero-btns">
+    <a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot&permissions=8" class="btn btn-white">Add to Discord — it's free</a>
+    <a href="#premium" class="btn btn-outline-white">See Premium →</a>
+  </div>
+  <div class="mockup-wrap">
+    <div class="discord-window">
+      <div class="discord-titlebar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+      </div>
+      <div class="discord-body">
+        <div class="discord-sidebar">
+          <div class="sidebar-label">Study Server</div>
+          <div class="sidebar-ch"># general</div>
+          <div class="sidebar-ch active"># homework</div>
+          <div class="sidebar-ch"># study-logs</div>
+          <div class="sidebar-ch"># grades</div>
         </div>
-    </nav>
-
-    <header>
-        <span class="logo">📚</span>
-        <h1>StudySteve</h1>
-        <p class="tagline">AI-powered study tools designed to help you learn faster, stay organized, and ace every class.</p>
-    </header>
-
-    <main>
-        <section class="hero">
-            <div class="hero-content">
-                <h2>Everything you need to study smarter.</h2>
-                <p>From quiz generators to flashcards, grade tracking to AI explanations, StudySteve helps you stay on top of coursework without burning out.</p>
-                <div class="cta-buttons">
-                    <a class="btn btn-primary" href="#features">Explore features</a>
-                    <a class="btn btn-secondary" href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&permissions=8&integration_type=0&scope=bot+applications.commands">Add to Discord</a>
-                </div>
+        <div class="discord-chat">
+          <div class="chat-msg">
+            <div class="avatar av-user">👤</div>
+            <div>
+              <div class="msg-header"><span class="msg-name name-user">you</span><span class="msg-time">Today at 9:01 AM</span></div>
+              <div class="msg-text">/ai explain photosynthesis</div>
             </div>
-            <div class="hero-image">
-                <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=1200&q=80" alt="Person studying with laptop">
+          </div>
+          <div class="chat-msg">
+            <div class="avatar av-bot">📚</div>
+            <div>
+              <div class="msg-header"><span class="msg-name name-bot">StudySteve</span><span class="msg-time">Today at 9:01 AM</span></div>
+              <div class="embed">
+                <div class="embed-title">📖 Photosynthesis — Plain English</div>
+                <div class="embed-text">Photosynthesis is how plants make food from sunlight. Leaves absorb light and use it to convert CO₂ and water into glucose and oxygen. Think of it as a solar-powered kitchen — sun is the energy, CO₂ and water are the ingredients, glucose is the meal. 🌱</div>
+              </div>
             </div>
-        </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <section id="features" class="features">
-            <h2 class="section-title">Features</h2>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h3>AI explanations</h3>
-                    <p>Ask StudySteve to explain concepts, solve problems, or generate step-by-step solutions in plain language.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Auto flashcards</h3>
-                    <p>Convert notes into flashcards automatically and review with spaced repetition (coming soon).</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Grade tracking</h3>
-                    <p>Log assignment scores and see your class average update instantly.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Study timers</h3>
-                    <p>Start Pomodoro timers, keep focus, and track how much time you spend studying.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Quiz mode</h3>
-                    <p>Turn notes into quizzes to test your recall and strengthen memory retention.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Server-based settings</h3>
-                    <p>Customize StudySteve per Discord server so each class has its own settings and permissions.</p>
-                </div>
-            </div>
-        </section>
-    </main>
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Features</span>
+      <h2>Everything you need to stay on top</h2>
+      <p>Solid free tools for every student, plus AI features when you need to go deeper.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card">
+        <span class="feat-icon">📝</span>
+        <span class="feat-tag tag-free">Free</span>
+        <h3>Assignment Tracker</h3>
+        <p>Add homework with due dates, mark complete, and see everything pending, overdue, or upcoming at a glance.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">⏱️</span>
+        <span class="feat-tag tag-free">Free</span>
+        <h3>Study Timer</h3>
+        <p>Start focused sessions by subject, check time remaining, and view a full breakdown of your study hours.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">📊</span>
+        <span class="feat-tag tag-free">Free</span>
+        <h3>Grade Tracker</h3>
+        <p>Log grades, view averages per subject, and identify your strongest and weakest areas instantly.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🤖</span>
+        <span class="feat-tag tag-premium">Premium</span>
+        <h3>AI Explanations & Quizzes</h3>
+        <p>Get plain-English explanations of any topic, or generate custom practice questions for any subject.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🃏</span>
+        <span class="feat-tag tag-premium">Premium</span>
+        <h3>Flashcard Maker</h3>
+        <p>Paste your notes and StudySteve turns them into a full set of flashcards in seconds.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🔔</span>
+        <span class="feat-tag tag-free">Free</span>
+        <h3>Daily & Weekly Reports</h3>
+        <p>Morning DMs with what's due today, plus a weekly summary of your progress every Sunday.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <footer>
-        <p>Built by Devin Hickman. <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
-        <p>&copy; 2026 StudySteve</p>
-    </footer>
+<section class="premium" id="premium">
+  <div class="container">
+    <div class="premium-inner">
+      <div>
+        <h2>Unlock your full potential with Premium</h2>
+        <p style="opacity:.88; margin-bottom:2rem; font-size:1.05rem;">All the AI tools you need to study smarter — activated instantly when you subscribe.</p>
+        <ul class="prem-list">
+          <li>AI Topic Explanations</li>
+          <li>Quiz Generator</li>
+          <li>Flashcard Maker</li>
+          <li>Study Planner</li>
+          <li>Math Equation Renderer</li>
+          <li>Chemical Structures</li>
+          <li>AI Grade Analysis</li>
+          <li>Syllabus Import</li>
+        </ul>
+        <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+          <a href="premium.html" class="btn btn-white">Subscribe — $5/month</a>
+          <a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot&permissions=8" class="btn btn-outline-white">Try free first</a>
+        </div>
+      </div>
+      <div class="price-card">
+        <div class="price-amount">$5</div>
+        <span class="price-period">per month · cancel anytime</span>
+        <hr class="price-divider" />
+        <ul class="price-features">
+          <li>✓&nbsp; All 8 AI-powered features</li>
+          <li>✓&nbsp; Activated instantly after payment</li>
+          <li>✓&nbsp; Auto-revoked on cancellation</li>
+          <li>✓&nbsp; No contracts or hidden fees</li>
+          <li>✓&nbsp; Works in every Discord server</li>
+        </ul>
+        <a href="premium.html" class="btn btn-white" style="width:100%; text-align:center; display:block;">Get Premium →</a>
+        <div class="secure-note">🔒 Payments processed securely by Stripe</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how-it-works" style="background:var(--bg-alt);">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Getting Started</span>
+      <h2>Up and running in minutes</h2>
+      <p>No configuration headaches. Add the bot and start using it straight away.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Add StudySteve</h3>
+        <p>Invite the bot to your Discord server. No complicated permissions or setup required.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Run /setup</h3>
+        <p>Set your timezone, morning DM time, school link, and weekly report preferences.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Start Tracking</h3>
+        <p>Use /add for assignments, /timer for study sessions, and /grades to log your scores.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h3>Go Premium</h3>
+        <p>Subscribe for $5/month to unlock all AI tools — activated the moment you pay.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">📚 StudySteve</div>
+      <p class="footer-desc">The AI-powered Discord study bot for students who want to stay organised and study smarter, not harder.</p>
+      <a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot&permissions=8" class="btn btn-primary" style="font-size:.9rem; padding:.7rem 1.5rem;">Add to Discord</a>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#premium">Premium</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal & Support</h4>
+      <ul>
+        <li><a href="terms.html">Terms of Service</a></li>
+        <li><a href="privacy.html">Privacy Policy</a></li>
+        <li><a href="mailto:beyblate10@gmail.com">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 Devin Hickman · StudySteve Discord Bot · Made for students everywhere</div>
+</footer>
+
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+</script>
 </body>
 </html>

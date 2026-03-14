@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudySteve Premium — Unlock AI Study Tools for $5/month</title>
+  <meta name="description" content="Upgrade to StudySteve Premium and unlock AI explanations, quizzes, flashcards, study plans and more. $5/month, cancel anytime." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>" />
+  <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+  <style>
+    :root {
+      --primary: #667eea; --purple: #764ba2; --green: #48bb78;
+      --text: #1a202c; --muted: #718096; --border: #e2e8f0;
+      --bg-alt: #f7f9fc; --white: #ffffff;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,.07);
+      --shadow-md: 0 8px 30px rgba(0,0,0,.10);
+      --shadow-lg: 0 20px 60px rgba(0,0,0,.14);
+      --grad: linear-gradient(135deg, var(--primary), var(--purple));
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text); background: var(--white); line-height: 1.6; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1140px; margin: 0 auto; padding: .9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .nav-brand { font-size: 1.2rem; font-weight: 800; color: var(--text); text-decoration: none; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-weight: 600; font-size: .95rem; transition: color .2s; }
+    .nav-links a:hover { color: var(--primary); }
+    .nav-cta { background: var(--grad); color: white !important; padding: .5rem 1.2rem; border-radius: 50px; }
+
+    /* HERO */
+    .hero {
+      background: var(--grad);
+      color: white;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 15% 50%, rgba(255,255,255,.07), transparent 55%),
+        radial-gradient(circle at 85% 20%, rgba(255,255,255,.05), transparent 50%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 50px;
+      padding: .4rem 1.1rem;
+      font-size: .85rem;
+      font-weight: 600;
+      margin-bottom: 1.75rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -.03em;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 span { opacity: .75; }
+    .hero-sub {
+      font-size: 1.15rem;
+      opacity: .88;
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-price {
+      display: inline-flex;
+      align-items: baseline;
+      gap: .3rem;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 16px;
+      padding: .75rem 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(8px);
+    }
+    .price-big { font-size: 3rem; font-weight: 800; line-height: 1; }
+    .price-detail { font-size: 1rem; opacity: .75; }
+    .hero-trust {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-size: .88rem;
+      opacity: .8;
+    }
+    .hero-trust span { display: flex; align-items: center; gap: .4rem; }
+
+    /* CHECKOUT SECTION */
+    .checkout-section {
+      background: var(--bg-alt);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .checkout-card {
+      max-width: 520px;
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 3rem 2.5rem;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .checkout-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--grad);
+    }
+    .checkout-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: .5rem;
+      color: var(--text);
+    }
+    .checkout-sub {
+      color: var(--muted);
+      font-size: .95rem;
+      margin-bottom: 2rem;
+    }
+    .checkout-steps {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 2rem;
+      background: var(--bg-alt);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .checkout-steps li {
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+      padding: .5rem 0;
+      font-size: .9rem;
+      color: #4a5568;
+      border-bottom: 1px solid var(--border);
+    }
+    .checkout-steps li:last-child { border-bottom: none; }
+    .step-badge {
+      background: var(--grad);
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: .72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: .1rem;
+    }
+    /* Center the Stripe buy button */
+    stripe-buy-button { display: block; }
+    .stripe-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .checkout-secure {
+      font-size: .8rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+    }
+
+    /* COMPARE TABLE */
+    .compare { padding: 5rem 2rem; }
+    .compare .container { max-width: 860px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .section-label { display: inline-block; background: #eef2ff; color: var(--primary); font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: .3rem .9rem; border-radius: 50px; margin-bottom: 1rem; }
+    .section-header h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: .6rem; }
+    .section-header p { color: var(--muted); font-size: 1rem; }
+
+    .compare-table { width: 100%; border-collapse: collapse; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid var(--border); }
+    .compare-table thead tr { background: var(--grad); color: white; }
+    .compare-table th { padding: 1.1rem 1.5rem; font-size: .95rem; font-weight: 700; text-align: center; }
+    .compare-table th:first-child { text-align: left; }
+    .compare-table tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+    .compare-table tbody tr:last-child { border-bottom: none; }
+    .compare-table tbody tr:hover { background: var(--bg-alt); }
+    .compare-table td { padding: .9rem 1.5rem; font-size: .93rem; color: #4a5568; text-align: center; }
+    .compare-table td:first-child { text-align: left; font-weight: 600; color: var(--text); }
+    .compare-table .category-row td { background: var(--bg-alt); font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: .6rem 1.5rem; }
+    .yes { color: var(--green); font-size: 1.1rem; }
+    .no { color: #cbd5e0; font-size: 1.1rem; }
+    .col-premium { background: rgba(102,126,234,.04); }
+
+    /* FEATURES GRID */
+    .prem-features { background: var(--bg-alt); padding: 5rem 2rem; }
+    .feat-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+    .feat-item { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; transition: transform .25s, box-shadow .25s; }
+    .feat-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .feat-item-icon { font-size: 2rem; margin-bottom: .75rem; display: block; }
+    .feat-item h3 { font-size: 1rem; font-weight: 700; margin-bottom: .4rem; }
+    .feat-item p { color: var(--muted); font-size: .88rem; line-height: 1.6; }
+
+    /* FAQ */
+    .faq { padding: 5rem 2rem; max-width: 720px; margin: 0 auto; }
+    .faq-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: .75rem; overflow: hidden; }
+    .faq-q { width: 100%; background: none; border: none; text-align: left; padding: 1.1rem 1.5rem; font-size: .97rem; font-weight: 700; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: inherit; transition: background .15s; }
+    .faq-q:hover { background: var(--bg-alt); }
+    .faq-arrow { font-size: 1rem; transition: transform .25s; color: var(--primary); }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-a { display: none; padding: 0 1.5rem 1.1rem; color: #4a5568; font-size: .92rem; line-height: 1.7; }
+    .faq-item.open .faq-a { display: block; }
+
+    /* CTA BOTTOM */
+    .cta-bottom { background: var(--grad); color: white; padding: 5rem 2rem; text-align: center; }
+    .cta-bottom h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: 1rem; }
+    .cta-bottom p { opacity: .88; margin-bottom: 2.5rem; font-size: 1.05rem; max-width: 480px; margin-left: auto; margin-right: auto; margin-bottom: 2.5rem; }
+    .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn { display: inline-block; padding: .85rem 2rem; border-radius: 50px; font-weight: 700; font-size: .95rem; text-decoration: none; transition: all .25s ease; }
+    .btn-white { background: white; color: var(--primary); }
+    .btn-white:hover { background: #f0f0ff; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.15); }
+    .btn-outline-white { background: transparent; color: white; border: 2px solid rgba(255,255,255,.6); }
+    .btn-outline-white:hover { background: rgba(255,255,255,.1); border-color: white; transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer { background: #1a202c; color: white; padding: 2.5rem 2rem; text-align: center; }
+    .footer-links { display: flex; gap: 1.5rem; justify-content: center; list-style: none; margin-bottom: 1rem; flex-wrap: wrap; }
+    .footer-links a { color: #a0aec0; text-decoration: none; font-size: .9rem; transition: color .2s; }
+    .footer-links a:hover { color: white; }
+    .footer-copy { color: #4a5568; font-size: .82rem; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .checkout-card { padding: 2rem 1.5rem; }
+      .compare-table th, .compare-table td { padding: .75rem 1rem; font-size: .85rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">📚 StudySteve</a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/#features">Features</a></li>
+      <li><a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot&permissions=8" class="nav-cta">Add to Discord</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">✨ StudySteve Premium</div>
+  <h1>Your AI study partner.<br><span>For $5 a month.</span></h1>
+  <p class="hero-sub">Unlock AI-powered explanations, quizzes, flashcards, and study plans — all directly inside Discord.</p>
+  <div class="hero-price">
+    <span class="price-big">$5</span>
+    <span class="price-detail">/ month &nbsp;·&nbsp; cancel anytime</span>
+  </div>
+  <div class="hero-trust">
+    <span>✓ Activated instantly</span>
+    <span>✓ No contracts</span>
+    <span>✓ Secure via Stripe</span>
+    <span>✓ Works in every server</span>
+  </div>
+</section>
+
+<!-- CHECKOUT -->
+<section class="checkout-section">
+  <div class="checkout-card">
+    <div class="checkout-title">Subscribe to Premium</div>
+    <div class="checkout-sub">One step — enter your Discord User ID and pay.</div>
+    <ol class="checkout-steps">
+      <li>
+        <div class="step-badge">1</div>
+        <div><strong>Find your Discord User ID</strong> — enable Developer Mode in Discord (Settings → Advanced → Developer Mode), then right-click your name and select <em>Copy User ID</em>. It's an 18-digit number.</div>
+      </li>
+      <li>
+        <div class="step-badge">2</div>
+        <div><strong>Click Subscribe below</strong> — enter that ID in the custom field when prompted, then complete payment.</div>
+      </li>
+      <li>
+        <div class="step-badge">3</div>
+        <div><strong>Premium activates instantly</strong> — run <code>/premium</code> in Discord to confirm. All AI features are unlocked immediately.</div>
+      </li>
+    </ol>
+    <div class="stripe-wrap">
+      <stripe-buy-button
+        buy-button-id="buy_btn_1TAlDpFNP0J6VdMWcndYmQr7"
+        publishable-key="pk_live_51TAOtTFNP0J6VdMW47OTqGHfMptQOOBBQ6DOa7FGLOEae52OR7HBSrB4BhAyNoEgF8tORekfIQVU69LUgXeP8Rbp00paL5jPNe"
+      ></stripe-buy-button>
+    </div>
+    <div class="checkout-secure">🔒 Payments processed securely by Stripe. We never see your card details.</div>
+  </div>
+</section>
+
+<!-- COMPARE TABLE -->
+<section class="compare">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Compare Plans</span>
+      <h2>Free vs Premium</h2>
+      <p>Start free, upgrade when you're ready.</p>
+    </div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Free</th>
+          <th class="col-premium">✨ Premium</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="category-row"><td colspan="3">Core Tools</td></tr>
+        <tr><td>Assignment Tracker</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+        <tr><td>Study Timer & Stats</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+        <tr><td>Grade Tracker</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+        <tr><td>Morning DMs & Weekly Reports</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+        <tr class="category-row"><td colspan="3">AI Features</td></tr>
+        <tr><td>AI Topic Explanations</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+        <tr><td>Custom Quiz Generator</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+        <tr><td>Flashcard Maker from Notes</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+        <tr><td>Personalised Study Planner</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+        <tr><td>Math Equation Renderer</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+        <tr><td>Chemical Structure Viewer</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+        <tr><td>AI Grade Analysis</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+        <tr><td>Syllabus Screenshot Import</td><td><span class="no">—</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+        <tr class="category-row"><td colspan="3">Pricing</td></tr>
+        <tr><td>Cost</td><td>Free forever</td><td class="col-premium"><strong>$5 / month</strong></td></tr>
+        <tr><td>Cancel anytime</td><td><span class="yes">✓</span></td><td class="col-premium"><span class="yes">✓</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- PREMIUM FEATURES DETAIL -->
+<section class="prem-features">
+  <div class="section-header">
+    <span class="section-label">What You Unlock</span>
+    <h2>8 AI tools, one subscription</h2>
+    <p>Everything powered by GPT-4o mini — fast, accurate, and built for students.</p>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-item">
+      <span class="feat-item-icon">🤖</span>
+      <h3>AI Explanations</h3>
+      <p>Type any topic and get a clear, jargon-free explanation tailored to your level. Perfect for confusing lectures.</p>
+    </div>
+    <div class="feat-item">
+      <span class="feat-item-icon">📝</span>
+      <h3>Quiz Generator</h3>
+      <p>Generate practice questions for any subject and topic. Great for exam prep without the hunting for past papers.</p>
+    </div>
+    <div class="feat-item">
+      <span class="feat-item-icon">🃏</span>
+      <h3>Flashcard Maker</h3>
+      <p>Paste your notes and get a full set of flashcards back in seconds. Study smarter, not longer.</p>
+    </div>
+    <div class="feat-item">
+      <span class="feat-item-icon">📅</span>
+      <h3>Study Planner</h3>
+      <p>Get a personalised day-by-day study plan for any subject and deadline. Never cram again.</p>
+    </div>
+    <div class="feat-item">
+      <span class="feat-item-icon">➕</span>
+      <h3>Math Renderer</h3>
+      <p>Type any equation and get it rendered and explained step by step. Works for calculus, stats, and more.</p>
+    </div>
+    <div class="feat-item">
+      <span class="feat-item-icon">🧪</span>
+      <h3>Chemical Structures</h3>
+      <p>Name any molecule and see its structure diagram instantly. A must-have for chemistry students.</p>
+    </div>
+    <div class="feat-item">
+      <span class="feat-item-icon">📊</span>
+      <h3>AI Grade Analysis</h3>
+      <p>Upload a screenshot of your grade report and get an AI breakdown of where to focus your effort.</p>
+    </div>
+    <div class="feat-item">
+      <span class="feat-item-icon">🗓️</span>
+      <h3>Syllabus Import</h3>
+      <p>Upload a photo of your syllabus and StudySteve extracts and adds all your assignments automatically.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="faq">
+    <div class="section-header">
+      <span class="section-label">FAQ</span>
+      <h2>Common questions</h2>
+    </div>
+    <div class="faq-item open">
+      <button class="faq-q">How does premium activate? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a">The moment your payment goes through, our system automatically grants premium to the Discord User ID you entered at checkout. Run <code>/premium</code> in Discord to confirm — it should show immediately.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">What's my Discord User ID and where do I find it? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a">It's an 18-digit number unique to your account. To find it: open Discord → Settings → Advanced → turn on Developer Mode. Then right-click your username anywhere and click "Copy User ID".</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Can I cancel anytime? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a">Yes. Cancel through Stripe at any time. You keep premium access until the end of your current billing period, then it's automatically revoked. No awkward cancellation flows or hidden fees.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Does premium work in multiple Discord servers? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a">Yes — premium is tied to your Discord User ID, so it works in every server where StudySteve is installed. One subscription covers all your servers.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Is my payment information secure? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a">Payments are handled entirely by Stripe, one of the world's most trusted payment processors. We never see or store your card details — only Stripe does.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">What if premium doesn't activate after payment? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a">Make sure you entered the correct Discord User ID at checkout. If you did and it still hasn't activated within a few minutes, DM <strong>bunglest</strong> on Discord or email <strong>beyblate10@gmail.com</strong> and we'll sort it immediately.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BOTTOM -->
+<section class="cta-bottom">
+  <h2>Ready to study smarter?</h2>
+  <p>Join StudySteve Premium for $5/month and unlock every AI tool — cancel anytime.</p>
+  <div class="cta-btns">
+    <a href="#checkout-section" class="btn btn-white" onclick="window.scrollTo({top:document.querySelector('.checkout-section').offsetTop,behavior:'smooth'});return false;">Subscribe Now — $5/month</a>
+    <a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot&permissions=8" class="btn btn-outline-white">Try free first</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="terms.html">Terms of Service</a></li>
+    <li><a href="privacy.html">Privacy Policy</a></li>
+    <li><a href="mailto:beyblate10@gmail.com">Contact</a></li>
+  </ul>
+  <div class="footer-copy">&copy; 2026 Devin Hickman · StudySteve Discord Bot</div>
+</footer>
+
+<script>
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+</body>
+</html>
