@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,29 +8,125 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>" />
   <script async src="https://js.stripe.com/v3/buy-button.js"></script>
   <style>
+    /* ── Shared (theme-independent) ─────────────────────────────── */
     :root {
-      --primary: #667eea; --purple: #764ba2; --green: #48bb78;
-      --text: #1a202c; --muted: #718096; --border: #e2e8f0;
-      --bg-alt: #f7f9fc; --white: #ffffff;
-      --shadow-sm: 0 2px 8px rgba(0,0,0,.07);
-      --shadow-md: 0 8px 30px rgba(0,0,0,.10);
-      --shadow-lg: 0 20px 60px rgba(0,0,0,.14);
-      --grad: linear-gradient(135deg, var(--primary), var(--purple));
+      --primary: #667eea;
+      --purple:  #764ba2;
+      --green:   #48bb78;
+      --grad:    linear-gradient(135deg, #667eea, #764ba2);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,.12);
+      --shadow-md: 0 8px 30px rgba(0,0,0,.20);
+      --shadow-lg: 0 20px 60px rgba(0,0,0,.30);
+      --transition: background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease;
     }
+
+    /* ── Dark theme (default) ────────────────────────────────────── */
+    [data-theme="dark"] {
+      --bg:        #0d1117;
+      --bg-alt:    #161b27;
+      --card:      #1e2535;
+      --text:      #e2e8f0;
+      --muted:     #8892a4;
+      --border:    #2a3347;
+      --step-text: #a0aec0;
+      --label-bg:  rgba(102,126,234,.15);
+      --label-col: #a5b4fc;
+      --no-col:    #3a4556;
+      --col-prem:  rgba(102,126,234,.08);
+      --nav-bg:    rgba(13,17,23,.92);
+      --footer-bg: #080c12;
+      --footer-link: #64748b;
+      --code-bg:   rgba(102,126,234,.18);
+    }
+
+    /* ── Light theme ─────────────────────────────────────────────── */
+    [data-theme="light"] {
+      --bg:        #ffffff;
+      --bg-alt:    #f7f9fc;
+      --card:      #ffffff;
+      --text:      #1a202c;
+      --muted:     #718096;
+      --border:    #e2e8f0;
+      --step-text: #4a5568;
+      --label-bg:  #eef2ff;
+      --label-col: #667eea;
+      --no-col:    #cbd5e0;
+      --col-prem:  rgba(102,126,234,.04);
+      --nav-bg:    rgba(255,255,255,.95);
+      --footer-bg: #1a202c;
+      --footer-link: #a0aec0;
+      --code-bg:   rgba(102,126,234,.10);
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text); background: var(--white); line-height: 1.6; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      transition: var(--transition);
+    }
 
-    /* NAV */
-    nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
-    .nav-inner { max-width: 1140px; margin: 0 auto; padding: .9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-    .nav-brand { font-size: 1.2rem; font-weight: 800; color: var(--text); text-decoration: none; }
+    code {
+      background: var(--code-bg);
+      color: var(--primary);
+      padding: .1em .4em;
+      border-radius: 4px;
+      font-size: .88em;
+    }
+
+    /* ── NAV ─────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: var(--transition);
+    }
+    .nav-inner {
+      max-width: 1140px; margin: 0 auto;
+      padding: .9rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .nav-brand { font-size: 1.2rem; font-weight: 800; color: var(--text); text-decoration: none; transition: color .2s; }
     .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
     .nav-links a { text-decoration: none; color: var(--muted); font-weight: 600; font-size: .95rem; transition: color .2s; }
     .nav-links a:hover { color: var(--primary); }
     .nav-cta { background: var(--grad); color: white !important; padding: .5rem 1.2rem; border-radius: 50px; }
 
-    /* HERO */
+    /* Theme toggle button */
+    .theme-toggle {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      cursor: pointer;
+      width: 38px; height: 22px;
+      position: relative;
+      display: flex; align-items: center;
+      padding: 2px;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .theme-toggle-knob {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--grad);
+      transition: transform .25s ease;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .6rem;
+    }
+    [data-theme="light"] .theme-toggle-knob { transform: translateX(16px); }
+    [data-theme="dark"]  .theme-toggle-knob { transform: translateX(0); }
+    .theme-toggle-icon { font-size: .75rem; position: absolute; top: 50%; transform: translateY(-50%); }
+    .icon-moon { right: 5px; }
+    .icon-sun  { left:  5px; }
+    [data-theme="dark"]  .icon-sun  { opacity: 0; }
+    [data-theme="dark"]  .icon-moon { opacity: .5; }
+    [data-theme="light"] .icon-sun  { opacity: .5; }
+    [data-theme="light"] .icon-moon { opacity: 0; }
+
+    /* ── HERO ────────────────────────────────────────────────────── */
     .hero {
       background: var(--grad);
       color: white;
@@ -41,203 +137,141 @@
     }
     .hero::before {
       content: '';
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background:
         radial-gradient(circle at 15% 50%, rgba(255,255,255,.07), transparent 55%),
         radial-gradient(circle at 85% 20%, rgba(255,255,255,.05), transparent 50%);
       pointer-events: none;
     }
     .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
+      display: inline-flex; align-items: center; gap: .5rem;
       background: rgba(255,255,255,.15);
       border: 1px solid rgba(255,255,255,.3);
-      border-radius: 50px;
-      padding: .4rem 1.1rem;
-      font-size: .85rem;
-      font-weight: 600;
-      margin-bottom: 1.75rem;
+      border-radius: 50px; padding: .4rem 1.1rem;
+      font-size: .85rem; font-weight: 600; margin-bottom: 1.75rem;
     }
-    .hero h1 {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 800;
-      line-height: 1.12;
-      letter-spacing: -.03em;
-      margin-bottom: 1.25rem;
-    }
+    .hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; line-height: 1.12; letter-spacing: -.03em; margin-bottom: 1.25rem; }
     .hero h1 span { opacity: .75; }
-    .hero-sub {
-      font-size: 1.15rem;
-      opacity: .88;
-      max-width: 520px;
-      margin: 0 auto 2.5rem;
-    }
+    .hero-sub { font-size: 1.15rem; opacity: .88; max-width: 520px; margin: 0 auto 2.5rem; }
     .hero-price {
-      display: inline-flex;
-      align-items: baseline;
-      gap: .3rem;
+      display: inline-flex; align-items: baseline; gap: .3rem;
       background: rgba(255,255,255,.15);
       border: 1px solid rgba(255,255,255,.25);
-      border-radius: 16px;
-      padding: .75rem 1.5rem;
-      margin-bottom: 2rem;
-      backdrop-filter: blur(8px);
+      border-radius: 16px; padding: .75rem 1.5rem;
+      margin-bottom: 2rem; backdrop-filter: blur(8px);
     }
     .price-big { font-size: 3rem; font-weight: 800; line-height: 1; }
     .price-detail { font-size: 1rem; opacity: .75; }
-    .hero-trust {
-      display: flex;
-      gap: 1.5rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      font-size: .88rem;
-      opacity: .8;
-    }
+    .hero-trust { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: .88rem; opacity: .8; }
     .hero-trust span { display: flex; align-items: center; gap: .4rem; }
 
-    /* CHECKOUT SECTION */
-    .checkout-section {
-      background: var(--bg-alt);
-      padding: 4rem 2rem;
-      text-align: center;
-    }
+    /* ── CHECKOUT ────────────────────────────────────────────────── */
+    .checkout-section { background: var(--bg-alt); padding: 4rem 2rem; text-align: center; transition: var(--transition); }
     .checkout-card {
-      max-width: 520px;
-      margin: 0 auto;
-      background: var(--white);
+      max-width: 520px; margin: 0 auto;
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 3rem 2.5rem;
+      border-radius: 24px; padding: 3rem 2.5rem;
       box-shadow: var(--shadow-lg);
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
+      transition: var(--transition);
     }
     .checkout-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-      background: var(--grad);
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 4px; background: var(--grad);
     }
-    .checkout-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: .5rem;
-      color: var(--text);
-    }
-    .checkout-sub {
-      color: var(--muted);
-      font-size: .95rem;
-      margin-bottom: 2rem;
-    }
+    .checkout-title { font-size: 1.5rem; font-weight: 800; margin-bottom: .5rem; color: var(--text); }
+    .checkout-sub { color: var(--muted); font-size: .95rem; margin-bottom: 2rem; }
     .checkout-steps {
-      list-style: none;
-      text-align: left;
-      margin-bottom: 2rem;
-      background: var(--bg-alt);
-      border-radius: 12px;
-      padding: 1.25rem 1.5rem;
+      list-style: none; text-align: left; margin-bottom: 2rem;
+      background: var(--bg-alt); border-radius: 12px; padding: 1.25rem 1.5rem;
+      transition: var(--transition);
     }
     .checkout-steps li {
-      display: flex;
-      align-items: flex-start;
-      gap: .75rem;
-      padding: .5rem 0;
-      font-size: .9rem;
-      color: #4a5568;
+      display: flex; align-items: flex-start; gap: .75rem;
+      padding: .5rem 0; font-size: .9rem;
+      color: var(--step-text);
       border-bottom: 1px solid var(--border);
     }
     .checkout-steps li:last-child { border-bottom: none; }
     .step-badge {
-      background: var(--grad);
-      color: white;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      font-size: .72rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: .1rem;
+      background: var(--grad); color: white;
+      width: 22px; height: 22px; border-radius: 50%;
+      font-size: .72rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: .1rem;
     }
-    /* Center the Stripe buy button */
     stripe-buy-button { display: block; }
-    .stripe-wrap {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1.25rem;
-    }
-    .checkout-secure {
-      font-size: .8rem;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: .4rem;
-    }
+    .stripe-wrap { display: flex; justify-content: center; margin-bottom: 1.25rem; }
+    .checkout-secure { font-size: .8rem; color: var(--muted); display: flex; align-items: center; justify-content: center; gap: .4rem; }
 
-    /* COMPARE TABLE */
-    .compare { padding: 5rem 2rem; }
+    /* ── COMPARE TABLE ───────────────────────────────────────────── */
+    .compare { padding: 5rem 2rem; background: var(--bg); transition: var(--transition); }
     .compare .container { max-width: 860px; margin: 0 auto; }
     .section-header { text-align: center; margin-bottom: 3rem; }
-    .section-label { display: inline-block; background: #eef2ff; color: var(--primary); font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: .3rem .9rem; border-radius: 50px; margin-bottom: 1rem; }
-    .section-header h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: .6rem; }
+    .section-label {
+      display: inline-block; background: var(--label-bg); color: var(--label-col);
+      font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+      padding: .3rem .9rem; border-radius: 50px; margin-bottom: 1rem;
+    }
+    .section-header h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: .6rem; color: var(--text); }
     .section-header p { color: var(--muted); font-size: 1rem; }
 
     .compare-table { width: 100%; border-collapse: collapse; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid var(--border); }
     .compare-table thead tr { background: var(--grad); color: white; }
     .compare-table th { padding: 1.1rem 1.5rem; font-size: .95rem; font-weight: 700; text-align: center; }
     .compare-table th:first-child { text-align: left; }
-    .compare-table tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+    .compare-table tbody tr { border-bottom: 1px solid var(--border); background: var(--card); transition: background .15s; }
     .compare-table tbody tr:last-child { border-bottom: none; }
     .compare-table tbody tr:hover { background: var(--bg-alt); }
-    .compare-table td { padding: .9rem 1.5rem; font-size: .93rem; color: #4a5568; text-align: center; }
+    .compare-table td { padding: .9rem 1.5rem; font-size: .93rem; color: var(--step-text); text-align: center; }
     .compare-table td:first-child { text-align: left; font-weight: 600; color: var(--text); }
     .compare-table .category-row td { background: var(--bg-alt); font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: .6rem 1.5rem; }
     .yes { color: var(--green); font-size: 1.1rem; }
-    .no { color: #cbd5e0; font-size: 1.1rem; }
-    .col-premium { background: rgba(102,126,234,.04); }
+    .no  { color: var(--no-col); font-size: 1.1rem; }
+    .col-premium { background: var(--col-prem); }
 
-    /* FEATURES GRID */
-    .prem-features { background: var(--bg-alt); padding: 5rem 2rem; }
+    /* ── FEATURES GRID ───────────────────────────────────────────── */
+    .prem-features { background: var(--bg-alt); padding: 5rem 2rem; transition: var(--transition); }
     .feat-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
-    .feat-item { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; transition: transform .25s, box-shadow .25s; }
+    .feat-item {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.75rem;
+      transition: transform .25s, box-shadow .25s, background .25s, border-color .25s;
+    }
     .feat-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
     .feat-item-icon { font-size: 2rem; margin-bottom: .75rem; display: block; }
-    .feat-item h3 { font-size: 1rem; font-weight: 700; margin-bottom: .4rem; }
+    .feat-item h3 { font-size: 1rem; font-weight: 700; margin-bottom: .4rem; color: var(--text); }
     .feat-item p { color: var(--muted); font-size: .88rem; line-height: 1.6; }
 
-    /* FAQ */
+    /* ── FAQ ─────────────────────────────────────────────────────── */
+    .faq-section { background: var(--bg); transition: var(--transition); }
     .faq { padding: 5rem 2rem; max-width: 720px; margin: 0 auto; }
-    .faq-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: .75rem; overflow: hidden; }
+    .faq-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: .75rem; overflow: hidden; background: var(--card); transition: var(--transition); }
     .faq-q { width: 100%; background: none; border: none; text-align: left; padding: 1.1rem 1.5rem; font-size: .97rem; font-weight: 700; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: inherit; transition: background .15s; }
     .faq-q:hover { background: var(--bg-alt); }
     .faq-arrow { font-size: 1rem; transition: transform .25s; color: var(--primary); }
     .faq-item.open .faq-arrow { transform: rotate(180deg); }
-    .faq-a { display: none; padding: 0 1.5rem 1.1rem; color: #4a5568; font-size: .92rem; line-height: 1.7; }
+    .faq-a { display: none; padding: 0 1.5rem 1.1rem; color: var(--step-text); font-size: .92rem; line-height: 1.7; }
     .faq-item.open .faq-a { display: block; }
 
-    /* CTA BOTTOM */
+    /* ── CTA BOTTOM ──────────────────────────────────────────────── */
     .cta-bottom { background: var(--grad); color: white; padding: 5rem 2rem; text-align: center; }
     .cta-bottom h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: 1rem; }
-    .cta-bottom p { opacity: .88; margin-bottom: 2.5rem; font-size: 1.05rem; max-width: 480px; margin-left: auto; margin-right: auto; margin-bottom: 2.5rem; }
+    .cta-bottom p { opacity: .88; font-size: 1.05rem; max-width: 480px; margin: 0 auto 2.5rem; }
     .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     .btn { display: inline-block; padding: .85rem 2rem; border-radius: 50px; font-weight: 700; font-size: .95rem; text-decoration: none; transition: all .25s ease; }
     .btn-white { background: white; color: var(--primary); }
-    .btn-white:hover { background: #f0f0ff; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.15); }
+    .btn-white:hover { background: #f0f0ff; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.2); }
     .btn-outline-white { background: transparent; color: white; border: 2px solid rgba(255,255,255,.6); }
     .btn-outline-white:hover { background: rgba(255,255,255,.1); border-color: white; transform: translateY(-2px); }
 
-    /* FOOTER */
-    footer { background: #1a202c; color: white; padding: 2.5rem 2rem; text-align: center; }
+    /* ── FOOTER ──────────────────────────────────────────────────── */
+    footer { background: var(--footer-bg); color: white; padding: 2.5rem 2rem; text-align: center; transition: background .25s; }
     .footer-links { display: flex; gap: 1.5rem; justify-content: center; list-style: none; margin-bottom: 1rem; flex-wrap: wrap; }
-    .footer-links a { color: #a0aec0; text-decoration: none; font-size: .9rem; transition: color .2s; }
+    .footer-links a { color: var(--footer-link); text-decoration: none; font-size: .9rem; transition: color .2s; }
     .footer-links a:hover { color: white; }
-    .footer-copy { color: #4a5568; font-size: .82rem; }
+    .footer-copy { color: var(--footer-link); font-size: .82rem; }
 
     @media (max-width: 768px) {
       .nav-links { display: none; }
@@ -255,6 +289,13 @@
     <ul class="nav-links">
       <li><a href="/">Home</a></li>
       <li><a href="/#features">Features</a></li>
+      <li>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="theme-toggle-icon icon-sun">☀️</span>
+          <span class="theme-toggle-knob"></span>
+          <span class="theme-toggle-icon icon-moon">🌙</span>
+        </button>
+      </li>
       <li><a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot&permissions=8" class="nav-cta">Add to Discord</a></li>
     </ul>
   </div>
@@ -281,7 +322,7 @@
 <section class="checkout-section">
   <div class="checkout-card">
     <div class="checkout-title">Subscribe to Premium</div>
-    <div class="checkout-sub">One step — enter your Discord User ID and pay.</div>
+    <div class="checkout-sub">Coming from Discord? Run <code>/premium</code> in any server — your ID is grabbed automatically and you just pay. Visiting directly? Follow the steps below.</div>
     <ol class="checkout-steps">
       <li>
         <div class="step-badge">1</div>
@@ -397,7 +438,7 @@
 </section>
 
 <!-- FAQ -->
-<section>
+<section class="faq-section">
   <div class="faq">
     <div class="section-header">
       <span class="section-label">FAQ</span>
@@ -435,7 +476,7 @@
   <h2>Ready to study smarter?</h2>
   <p>Join StudySteve Premium for $5/month and unlock every AI tool — cancel anytime.</p>
   <div class="cta-btns">
-    <a href="#checkout-section" class="btn btn-white" onclick="window.scrollTo({top:document.querySelector('.checkout-section').offsetTop,behavior:'smooth'});return false;">Subscribe Now — $5/month</a>
+    <a href="#" class="btn btn-white" onclick="window.scrollTo({top:document.querySelector('.checkout-section').offsetTop,behavior:'smooth'});return false;">Subscribe Now — $5/month</a>
     <a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot&permissions=8" class="btn btn-outline-white">Try free first</a>
   </div>
 </section>
@@ -452,10 +493,25 @@
 </footer>
 
 <script>
-  // FAQ accordion
+  // ── Theme toggle ──────────────────────────────────────────────────
+  const html   = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+
+  // Load saved preference, fall back to dark
+  const saved = localStorage.getItem('theme') || 'dark';
+  html.setAttribute('data-theme', saved);
+
+  toggle.addEventListener('click', () => {
+    const current = html.getAttribute('data-theme');
+    const next    = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  // ── FAQ accordion ─────────────────────────────────────────────────
   document.querySelectorAll('.faq-q').forEach(btn => {
     btn.addEventListener('click', () => {
-      const item = btn.closest('.faq-item');
+      const item   = btn.closest('.faq-item');
       const isOpen = item.classList.contains('open');
       document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
       if (!isOpen) item.classList.add('open');

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,34 +7,80 @@
   <meta name="description" content="StudySteve is a Discord bot that helps students track assignments, study smarter with AI, and never miss a deadline." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>" />
   <style>
+    /* ── Shared ───────────────────────────────────────────────────── */
     :root {
-      --primary:   #667eea;
-      --purple:    #764ba2;
-      --green:     #48bb78;
+      --primary: #667eea; --purple: #764ba2; --green: #48bb78;
+      --grad: linear-gradient(135deg, #667eea, #764ba2);
+      --shadow-md: 0 8px 30px rgba(0,0,0,.20);
+      --shadow-lg: 0 20px 60px rgba(0,0,0,.30);
+      --transition: background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+
+    /* ── Dark (default) ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --bg:        #0d1117;
+      --bg-alt:    #161b27;
+      --card:      #1e2535;
+      --text:      #e2e8f0;
+      --muted:     #8892a4;
+      --border:    #2a3347;
+      --body-text: #a0aec0;
+      --label-bg:  rgba(102,126,234,.15);
+      --label-col: #a5b4fc;
+      --tag-free-bg:   rgba(72,187,120,.12);
+      --tag-free-col:  #68d391;
+      --tag-prem-bg:   rgba(102,126,234,.15);
+      --tag-prem-col:  #a5b4fc;
+      --nav-bg:    rgba(13,17,23,.92);
+      --footer-bg: #080c12;
+      --footer-text: #64748b;
+    }
+
+    /* ── Light ────────────────────────────────────────────────────── */
+    [data-theme="light"] {
+      --bg:        #ffffff;
+      --bg-alt:    #f7f9fc;
+      --card:      #ffffff;
       --text:      #1a202c;
       --muted:     #718096;
       --border:    #e2e8f0;
-      --bg-alt:    #f7f9fc;
-      --white:     #ffffff;
-      --shadow-md: 0 8px 30px rgba(0,0,0,.10);
-      --shadow-lg: 0 20px 60px rgba(0,0,0,.14);
-      --grad:      linear-gradient(135deg, var(--primary), var(--purple));
+      --body-text: #4a5568;
+      --label-bg:  #eef2ff;
+      --label-col: #667eea;
+      --tag-free-bg:   #f0fff4;
+      --tag-free-col:  #48bb78;
+      --tag-prem-bg:   #eef2ff;
+      --tag-prem-col:  #667eea;
+      --nav-bg:    rgba(255,255,255,.95);
+      --footer-bg: #1a202c;
+      --footer-text: #a0aec0;
     }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text); background: var(--white); line-height: 1.6; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text); background: var(--bg); line-height: 1.6; transition: var(--transition); }
 
-    /* NAV */
-    nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+    /* ── NAV ─────────────────────────────────────────────────────── */
+    nav { position: sticky; top: 0; z-index: 100; background: var(--nav-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: var(--transition); }
     .nav-inner { max-width: 1140px; margin: 0 auto; padding: .9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-    .nav-brand { font-size: 1.2rem; font-weight: 800; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: .5rem; }
+    .nav-brand { font-size: 1.2rem; font-weight: 800; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: .5rem; transition: color .2s; }
     .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
     .nav-links a { text-decoration: none; color: var(--muted); font-weight: 600; font-size: .95rem; transition: color .2s; }
     .nav-links a:hover { color: var(--primary); }
     .nav-cta { background: var(--grad); color: white !important; padding: .5rem 1.2rem; border-radius: 50px; transition: opacity .2s, transform .2s; }
     .nav-cta:hover { opacity: .9; transform: translateY(-1px); }
 
-    /* HERO */
+    /* Theme toggle */
+    .theme-toggle { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 50px; cursor: pointer; width: 38px; height: 22px; position: relative; display: flex; align-items: center; padding: 2px; transition: var(--transition); flex-shrink: 0; }
+    .theme-toggle-knob { width: 16px; height: 16px; border-radius: 50%; background: var(--grad); transition: transform .25s ease; }
+    [data-theme="light"] .theme-toggle-knob { transform: translateX(16px); }
+    [data-theme="dark"]  .theme-toggle-knob { transform: translateX(0); }
+    .theme-toggle-icon { font-size: .75rem; position: absolute; top: 50%; transform: translateY(-50%); }
+    .icon-moon { right: 5px; } .icon-sun { left: 5px; }
+    [data-theme="dark"]  .icon-sun  { opacity: 0; } [data-theme="dark"]  .icon-moon { opacity: .5; }
+    [data-theme="light"] .icon-sun  { opacity: .5; } [data-theme="light"] .icon-moon { opacity: 0; }
+
+    /* ── HERO ─────────────────────────────────────────────────────── */
     .hero { background: var(--grad); color: white; padding: 6rem 2rem 4rem; text-align: center; position: relative; overflow: hidden; }
     .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 50%, rgba(255,255,255,.06), transparent 60%), radial-gradient(circle at 80% 20%, rgba(255,255,255,.04), transparent 50%); pointer-events: none; }
     .hero-badge { display: inline-block; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3); border-radius: 50px; padding: .35rem 1rem; font-size: .85rem; font-weight: 600; margin-bottom: 1.5rem; }
@@ -42,7 +88,7 @@
     .hero p { font-size: 1.2rem; opacity: .88; max-width: 580px; margin: 0 auto 2.5rem; }
     .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
-    /* DISCORD MOCKUP */
+    /* Discord Mockup */
     .mockup-wrap { max-width: 680px; margin: 4rem auto 0; }
     .discord-window { background: #36393f; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-lg); text-align: left; font-size: .85rem; }
     .discord-titlebar { background: #2f3136; padding: .6rem 1rem; display: flex; align-items: center; gap: .5rem; }
@@ -66,7 +112,7 @@
     .embed-title { color: #667eea; font-weight: 700; font-size: .9rem; margin-bottom: .4rem; }
     .embed-text { color: #b9bbbe; font-size: .83rem; line-height: 1.6; }
 
-    /* BUTTONS */
+    /* ── BUTTONS ─────────────────────────────────────────────────── */
     .btn { display: inline-block; padding: .85rem 2rem; border-radius: 50px; font-weight: 700; font-size: .95rem; text-decoration: none; transition: all .25s ease; }
     .btn-white { background: white; color: var(--primary); }
     .btn-white:hover { background: #f0f0ff; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.15); }
@@ -77,27 +123,27 @@
     .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
     .btn-outline:hover { background: var(--primary); color: white; transform: translateY(-2px); }
 
-    /* SECTIONS */
+    /* ── SECTIONS ────────────────────────────────────────────────── */
     section { padding: 5rem 2rem; }
     .container { max-width: 1140px; margin: 0 auto; }
     .section-header { text-align: center; margin-bottom: 3.5rem; }
-    .section-label { display: inline-block; background: #eef2ff; color: var(--primary); font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: .3rem .9rem; border-radius: 50px; margin-bottom: 1rem; }
-    .section-header h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: .75rem; }
+    .section-label { display: inline-block; background: var(--label-bg); color: var(--label-col); font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: .3rem .9rem; border-radius: 50px; margin-bottom: 1rem; }
+    .section-header h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: .75rem; color: var(--text); }
     .section-header p { color: var(--muted); font-size: 1.05rem; max-width: 540px; margin: 0 auto; }
 
-    /* FEATURES */
-    .features { background: var(--bg-alt); }
+    /* ── FEATURES ────────────────────────────────────────────────── */
+    .features { background: var(--bg-alt); transition: var(--transition); }
     .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-    .feat-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; transition: transform .25s, box-shadow .25s; }
+    .feat-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; transition: transform .25s, box-shadow .25s, background .25s, border-color .25s; }
     .feat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
     .feat-icon { font-size: 2.2rem; margin-bottom: 1rem; display: block; }
-    .feat-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .6rem; }
+    .feat-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .6rem; color: var(--text); }
     .feat-card p { color: var(--muted); font-size: .93rem; line-height: 1.7; }
     .feat-tag { display: inline-block; font-size: .72rem; font-weight: 700; padding: .2rem .6rem; border-radius: 50px; margin-bottom: .75rem; }
-    .tag-free { background: #f0fff4; color: var(--green); }
-    .tag-premium { background: #eef2ff; color: var(--primary); }
+    .tag-free    { background: var(--tag-free-bg); color: var(--tag-free-col); }
+    .tag-premium { background: var(--tag-prem-bg); color: var(--tag-prem-col); }
 
-    /* PREMIUM */
+    /* ── PREMIUM ─────────────────────────────────────────────────── */
     .premium { background: var(--grad); color: white; }
     .premium-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
     .premium h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: 1rem; }
@@ -112,24 +158,24 @@
     .price-features li { padding: .4rem 0; font-size: .92rem; opacity: .9; }
     .secure-note { font-size: .82rem; opacity: .65; margin-top: 1rem; }
 
-    /* HOW IT WORKS */
+    /* ── HOW IT WORKS ─────────────────────────────────────────────── */
     .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 2rem; }
-    .step-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; text-align: center; transition: transform .25s, box-shadow .25s; }
+    .step-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; text-align: center; transition: transform .25s, box-shadow .25s, background .25s, border-color .25s; }
     .step-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
     .step-num { width: 48px; height: 48px; border-radius: 50%; background: var(--grad); color: white; font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
-    .step-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .6rem; }
+    .step-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .6rem; color: var(--text); }
     .step-card p { color: var(--muted); font-size: .93rem; }
 
-    /* FOOTER */
-    footer { background: #1a202c; color: white; padding: 4rem 2rem 2rem; }
+    /* ── FOOTER ──────────────────────────────────────────────────── */
+    footer { background: var(--footer-bg); color: white; padding: 4rem 2rem 2rem; transition: background .25s; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; max-width: 1140px; margin: 0 auto 3rem; }
     .footer-brand { font-size: 1.3rem; font-weight: 800; margin-bottom: 1rem; }
-    .footer-desc { color: #a0aec0; font-size: .93rem; line-height: 1.7; margin-bottom: 1.5rem; }
-    .footer-col h4 { font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #a0aec0; margin-bottom: 1rem; }
+    .footer-desc { color: var(--footer-text); font-size: .93rem; line-height: 1.7; margin-bottom: 1.5rem; }
+    .footer-col h4 { font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--footer-text); margin-bottom: 1rem; }
     .footer-col ul { list-style: none; }
-    .footer-col a { color: #a0aec0; text-decoration: none; font-size: .93rem; display: block; margin-bottom: .5rem; transition: color .2s; }
+    .footer-col a { color: var(--footer-text); text-decoration: none; font-size: .93rem; display: block; margin-bottom: .5rem; transition: color .2s; }
     .footer-col a:hover { color: white; }
-    .footer-bottom { border-top: 1px solid #2d3748; padding-top: 2rem; text-align: center; color: #4a5568; font-size: .85rem; max-width: 1140px; margin: 0 auto; }
+    .footer-bottom { border-top: 1px solid #2d3748; padding-top: 2rem; text-align: center; color: var(--footer-text); font-size: .85rem; max-width: 1140px; margin: 0 auto; }
 
     @media (max-width: 768px) {
       .nav-links { display: none; }
@@ -149,6 +195,13 @@
       <li><a href="#features">Features</a></li>
       <li><a href="#premium">Premium</a></li>
       <li><a href="#how-it-works">How It Works</a></li>
+      <li>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="theme-toggle-icon icon-sun">☀️</span>
+          <span class="theme-toggle-knob"></span>
+          <span class="theme-toggle-icon icon-moon">🌙</span>
+        </button>
+      </li>
       <li><a href="https://discord.com/oauth2/authorize?client_id=1481786829983322293&scope=bot&permissions=8" class="nav-cta">Add to Discord</a></li>
     </ul>
   </div>
@@ -346,6 +399,19 @@
 </footer>
 
 <script>
+  // ── Theme toggle ──────────────────────────────────────────────────
+  const html   = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const saved  = localStorage.getItem('theme') || 'dark';
+  html.setAttribute('data-theme', saved);
+
+  toggle.addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  // ── Smooth scroll ─────────────────────────────────────────────────
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const t = document.querySelector(a.getAttribute('href'));
